@@ -1,0 +1,38 @@
+static int dir[4][2] = {{1,0},{-1,0},{0,1},{0,-1}};
+static int m, n;
+
+int dfs(int** a, int** dp, int i, int j) {
+    if (dp[i][j]) return dp[i][j];
+
+    int best = 1;
+    int val = a[i][j];
+
+    for (int k = 0; k < 4; k++) {
+        int x = i + dir[k][0];
+        int y = j + dir[k][1];
+
+        if (x >= 0 && x < m && y >= 0 && y < n && a[x][y] > val) {
+            int t = 1 + dfs(a, dp, x, y);
+            if (t > best) best = t;
+        }
+    }
+    return dp[i][j] = best;
+}
+
+int longestIncreasingPath(int** matrix, int matrixSize, int* matrixColSize) {
+    m = matrixSize;
+    n = matrixColSize[0];
+
+    int** dp = (int**)malloc(m * sizeof(int*));
+    for (int i = 0; i < m; i++)
+        dp[i] = (int*)calloc(n, sizeof(int));
+
+    int ans = 0;
+    for (int i = 0; i < m; i++)
+        for (int j = 0; j < n; j++) {
+            int v = dfs(matrix, dp, i, j);
+            if (v > ans) ans = v;
+        }
+
+    return ans;
+}
