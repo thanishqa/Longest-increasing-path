@@ -1,38 +1,71 @@
-static int dir[4][2] = {{1,0},{-1,0},{0,1},{0,-1}};
-static int m, n;
+Longest Increasing Path in a Matrix
+🧩 Problem Statement
 
-int dfs(int** a, int** dp, int i, int j) {
-    if (dp[i][j]) return dp[i][j];
+Given an m x n integer matrix, return the length of the longest increasing path in the matrix.
 
-    int best = 1;
-    int val = a[i][j];
+From each cell, you can move in four directions:
 
-    for (int k = 0; k < 4; k++) {
-        int x = i + dir[k][0];
-        int y = j + dir[k][1];
+Up
 
-        if (x >= 0 && x < m && y >= 0 && y < n && a[x][y] > val) {
-            int t = 1 + dfs(a, dp, x, y);
-            if (t > best) best = t;
-        }
-    }
-    return dp[i][j] = best;
-}
+Down
 
-int longestIncreasingPath(int** matrix, int matrixSize, int* matrixColSize) {
-    m = matrixSize;
-    n = matrixColSize[0];
+Left
 
-    int** dp = (int**)malloc(m * sizeof(int*));
-    for (int i = 0; i < m; i++)
-        dp[i] = (int*)calloc(n, sizeof(int));
+Right
 
-    int ans = 0;
-    for (int i = 0; i < m; i++)
-        for (int j = 0; j < n; j++) {
-            int v = dfs(matrix, dp, i, j);
-            if (v > ans) ans = v;
-        }
+You may not move diagonally or outside the matrix boundaries.
 
-    return ans;
-}
+The next cell in the path must contain a strictly greater value than the current cell.
+
+💡 Approach
+
+This problem can be solved efficiently using Depth First Search (DFS) + Memoization (Dynamic Programming).
+
+🔹 Key Idea
+
+Treat each cell as a starting point.
+
+From each cell, explore all 4 directions.
+
+Move only if the next cell value is greater than the current value.
+
+Store already computed results in a dp table to avoid recomputation.
+
+Since values must be strictly increasing, cycles are impossible.
+This makes the matrix behave like a Directed Acyclic Graph (DAG).
+
+🧠 How the Algorithm Works
+
+Create a dp matrix initialized with 0.
+
+For each cell (i, j):
+
+Run DFS to calculate the longest increasing path starting from that cell.
+
+Store the result in dp[i][j].
+
+Keep track of the global maximum length.
+
+Return the maximum value found.
+
+Each cell is computed only once, ensuring efficiency.
+
+⏱️ Complexity Analysis
+
+Time Complexity: O(m × n)
+Each cell is processed once and explores at most 4 directions.
+
+Space Complexity: O(m × n)
+For the DP table and recursion stack.
+
+✅ Key Takeaways
+
+Model the matrix as a graph.
+
+Use DFS to explore increasing paths.
+
+Use memoization to avoid recomputation.
+
+Strictly increasing condition guarantees no cycles.
+
+Efficient solution runs in linear time relative to the number of cells
